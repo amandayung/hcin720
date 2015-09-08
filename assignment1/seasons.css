@@ -1,18 +1,8 @@
-/*css needed for proper paper.js resizing;
-fix by user3337813, found at:
-http://stackoverflow.com/questions/28896260/paper-js-wont-resize-the-canvas-correctly
-*/
 html, body {
     margin: 0;
     overflow: hidden;
     height: 100%;
     font-family: 'Noto Sans', sans-serif;
-}
-
-/* Scale canvas with resize attribute to full size */
-canvas[resize] {
-    width: 100%;
-    height: 100%;
 }
 
 h1 {

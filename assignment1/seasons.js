@@ -1,16 +1,18 @@
+//adding node modules
+var $ = require('jquery');
+
 //instagram API instructions are at:
 //https://instagram.com/developer/
 
 //instagram info
 var clientID = 'e99fdcee55a641358aa44f3ccaf7bc9b';
 var seasonTags = ['FALL', 'WINTER', 'SPRING', 'SUMMER'];
-
-//store current indices for updating
-var seasonIndex = [0, 0, 0, 0];
 var lastSeasonID = [0, 0, 0, 0];
 
+//store current indices for updating shapes
+var seasonIndex = [0, 0, 0, 0];
+
 //display parameters
-//var shapeDims = [30, 90];
 var imagesPerSeason = 20; //limited by instagram API
 var colorsPerImage = 5;
 var updateInterval = 10000; //time in ms
@@ -23,12 +25,6 @@ var shapeParams = {
 	maxRadius: 50
 };
 
-/*var shapeParams = {
-//these will get initialized once the canvas size is known
-width: 0,
-height: 0
-}*/
-
 //create a color thief object
 var colorThief = new ColorThief();
 
@@ -39,9 +35,10 @@ paper.install(window);
 //season section params
 var sectionParams = {
 	margin: 100
-	//these get defined in onload, since the canvas size needs to be known
+	//the rest get defined in onload, since the canvas size needs to be known
 }
 
+//placement parameters
 var seasonSections = [];
 var seasonBounds = [];
 
@@ -59,78 +56,38 @@ for (var i = 0; i < seasonTags.length; i++) {
 	colorShapes[i] = [];
 }
 
-
 //setup the paper canvas once everything is ready
 window.onload = function() {
 	paper.setup('instaCanvas');
 
+	//size for each season section
 	sectionParams.width = view.size.width/seasonTags.length - sectionParams.margin;
 	sectionParams.height = view.size.height - 200;
 
-	shapeParams.width = sectionParams.width/colorsPerImage;
-	shapeParams.height = sectionParams.height/imagesPerSeason;
-
 	//get position and size for each section
 	for (var i = 0; i < seasonTags.length; i++) {
+		//determine bounds for each section
 		var sectionPos = new Point(sectionParams.width*i + sectionParams.margin*i+sectionParams.margin/2, 0);
 		var sectionSize = new Size(sectionParams.width, sectionParams.height);
 		seasonBounds[i] = new Rectangle(sectionPos, sectionSize);
-		//var path = new Path.Rectangle(seasonBounds[i]);
-		//path.strokeColor = 'grey';
 
+		//add labels for each section
 		var text = new PointText({
 		    point: new Point(sectionPos.x, sectionPos.y+50),
 		    content: seasonTags[i],
-		    fillColor: 'grey',
+		    fillColor: 'grey', //british spelling, apparently
 		    fontFamily: 'Noto Sans',
 		    fontWeight: 'bold',
 		    fontSize: 50
 		});
 	}
 
-	//create shapes to display colors
-	/*for (var i = 0; i < seasonTags.length; i++) {
-		var startY = seasonBounds[i].y;
-		for (var j = 0; j < imagesPerSeason; j++) {
-			var startX = seasonBounds[i].x;
-			colorShapes[i][j] = [];
-
-			for (var k = 0; k < colorsPerImage; k++) {
-				//var shapePos = new Point(startX + shapeDims[0]*j, startY + shapeDims[1]*i);
-				var shapePos = new Point(startX, startY);
-				var shapeSize = new Size(shapeParams.width, shapeParams.height);
-				var rect = new Rectangle(shapePos, shapeSize);
-				colorShapes[i][j][k] = new Path.Rectangle(rect);
-				colorShapes[i][j][k].fillColor = 'black';
-
-				startX = startX + shapeParams.width;
-			}
-			startY = startY + shapeParams.height;
-
-		}
-
-	}*/
-
+	//update canvas with season labels
 	view.draw();
 
-	/*var startX = 10;
-	var startY = 20;
-
-	//create shapes to display colors
-	//set them to be invisible for now
-	for (var i = 0; i < seasonTags.length; i++) {
-		for (var j = 0; j < imagesPerSeason*colorsPerImage; j++) {
-			var shapePos = new Point(startX + shapeDims[0]*j, startY + shapeDims[1]*i);
-			var shapeSize = new Size(shapeDims[0], shapeDims[1]);
-			var rect = new Rectangle(shapePos, shapeSize);
-			colorShapes[i][j] = new Path.Rectangle(rect);
-			//colorShapes[i][j].fillColor = 'black';
-			//view.draw();
-		}
-	}*/
-
+	//get current image data
 	getImageData();
-	//update image data every 10 seconds
+	//then update image data every time interval passes
 	setInterval(updateImageData, updateInterval);
 }
 
@@ -177,53 +134,43 @@ function updateImageData() {
 
 //manipulate images
 function processImages(instadata, season) {
-	images = [];
 	for (i=0; i < instadata.data.length; i++) {
+		//make sure it's an image type
 		if (instadata.data[i].type == "image") {
+			//get image url
 			var source = instadata.data[i].images.thumbnail.url;
+
+			//updat last season ID to ensure the latest data is being retrieved
 			var id = instadata.data[i].id;
 			if (id > lastSeasonID[season]) {
 				lastSeasonID[season] = id;
 			}
 
+			//create image object so that we can get color data
 			var image = new Image();
 			//extremely important to include when getting images from different domain!
 			//source: https://github.com/lokesh/color-thief/issues/20
 			image.crossOrigin = 'Anonymous';
 			image.src = source;
 			image.onload = function () {
+				//get the dominate colors in this image
 	  			var colors = colorThief.getPalette(this, colorsPerImage);
+	  			//now add colors to the canvas
 	  			createPaintSplatter(colors, season);
-	  			//sendColors(colors, season);
 			}
 		}
 	}
 }
-
-//display images
-function sendColors(colors, season) {
-	//need to adjust RGB value to be between 0-1 for paperjs
-	for (var i = 0; i < colorsPerImage; i++) {
-		var paperColor = [colors[i][0]/255.0, colors[i][1]/255.0, colors[i][2]/255.0];
-		colorShapes[season][seasonIndex[season]][i].fillColor = paperColor;
-	}
-	view.draw();
-
-	//update shape index
-	seasonIndex[season]++;
-	if (seasonIndex[season] >= imagesPerSeason) {
-		seasonIndex[season] = 0;
-	}
-}
-
 
 //create paint splatter-like objects
 //code for createPaths and createBlob modified from:
 //http://paperjs.org/examples/hit-testing/
 function createPaintSplatter(colors, season) {
 	for (var i = 0; i < colorsPerImage; i++) {
+		//need to adjust RGB value to be between 0-1 for paperjs
 		var paperColor = [colors[i][0]/255, colors[i][1]/255, colors[i][2]/255];
 
+		//determine random variables to create the paint splatter blob for this particular season
 		var radiusDelta = shapeParams.maxRadius - shapeParams.minRadius;
 		var pointsDelta = shapeParams.maxPoints - shapeParams.minPoints;
 		var radius = shapeParams.minRadius + Math.random() * radiusDelta;
@@ -234,6 +181,7 @@ function createPaintSplatter(colors, season) {
 		if (colorShapes[season][seasonIndex[season]]) {
 			colorShapes[season][seasonIndex[season]].remove();
 		}
+		//create blob and add color
 		colorShapes[season][seasonIndex[season]] = createBlob(centerPoint, radius, points);
 		colorShapes[season][seasonIndex[season]].fillColor = paperColor;
 		colorShapes[season][seasonIndex[season]].fillColor.alpha = 0.8;
@@ -244,9 +192,11 @@ function createPaintSplatter(colors, season) {
 			seasonIndex[season] = 0;
 		}
 	}
+	//update canvas
 	view.draw();
 }
 
+//make a random blob-like shape based on parameters given
 function createBlob(center, maxRadius, points) {
 	var path = new Path();
 	path.closed = true;
