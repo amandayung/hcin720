@@ -1,0 +1,42 @@
+body {
+	font-family: 'Montserrat', sans-serif;
+}
+
+#content {
+	text-align: center;
+}
+
+#image-holder {
+	text-align: center;
+	width: 400px;
+	height: 400px;
+}
+
+.inline {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+/*d3 graph formatting,
+influenced by d3 tutorial:
+http://bl.ocks.org/mbostock/3883245*/
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+  shape-rendering: crispEdges;
+}
+	
+.axis text {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 15px;
+}
+
+.line {
+  fill: none;
+  stroke: #F36E21;
+  stroke-width: 5px;
+}
