@@ -1,7 +1,7 @@
 # hcin720
 This is repository where I store class assignments and projects for RIT's HCIN 720.
 
-## Assignment 1 Description:
+## Assignment 1
 
 This assignment required the use of a web API to visualize data. The web API I chose was the [Instagram API](https://instagram.com/developer/).
 
@@ -12,9 +12,12 @@ The data updates every 30 seconds, which any necessary changes made to the graph
 
 Libraries used in this visualization:
 * [JQuery](https://jquery.com/)
-* [d3 - for easier graph creation](http://d3js.org/)
+* [d3](http://d3js.org/) - for easier graph creation
 * [Google Fonts](https://www.google.com/fonts)
-* [Bootstrap - for some css styling](http://getbootstrap.com/)
+* [Bootstrap](http://getbootstrap.com/) - for some css styling
+
+Demo:
+[http://rawgit.com/amandayung/hcin720/master/assignment1/time.html](http://rawgit.com/amandayung/hcin720/master/assignment1/time.html)
 
 ### Part 2
 For the abstract visualization, I used the API to gather images that are tagged with one of the 4 seasons (fall, winter, spring, summer). The 5 most dominant colors in each image are then determined and "splattered" onto the screen in their respective season category.
@@ -23,7 +26,10 @@ The paint splatters are updated every 10 seconds when new tagged images are retr
 
 Libraries used in this visualization:
 * [JQuery](https://jquery.com/)
-* [Paper.js - for splatter visualization](http://paperjs.org/)
-* [Color Thief - nifty library for retrieving dominant colors from an image](http://lokeshdhakar.com/projects/color-thief/) 
+* [Paper.js](http://paperjs.org/) - for splatter visualization
+* [Color Thief](http://lokeshdhakar.com/projects/color-thief/) - nifty library for retrieving dominant colors from an image
 * [Google Fonts](https://www.google.com/fonts)
+
+Demo:
+[http://rawgit.com/amandayung/hcin720/master/assignment1/seasons.html](http://rawgit.com/amandayung/hcin720/master/assignment1/seasons.html)
 
