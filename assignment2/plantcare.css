@@ -1,0 +1,56 @@
+/*css needed for proper paper.js resizing;
+fix by user3337813, found at:
+http://stackoverflow.com/questions/28896260/paper-js-wont-resize-the-canvas-correctly
+*/
+html, body {
+    margin: 0;
+    height: 100%;
+    text-align: center;
+    font-family: 'Covered By Your Grace', sans-serif;
+}
+
+canvas {
+    width: 525;
+    height: 605;
+} 
+
+h1 {
+	font-size: 40px;
+	margin-bottom: 0;
+}
+
+.inline {
+	display: inline-block;
+	vertical-align: top - 20px;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+.grid path {
+      stroke-width: 0;
+}
+
+.x.axis line {
+  shape-rendering: auto;
+}
+
+.line {
+  fill: none;
+  stroke: #FFCC00;
+  stroke-width: 5px;
+}
+
+.axis text {
+	font-family: 'Covered By Your Grace', sans-serif;
+	font-size: 25px;
+}

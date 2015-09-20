@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>How's My Plant?</title>
+		<!--using bootstrap for some simple css styling-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<!--pretty fonts from Google-->
+		<link href='https://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
+		<link href="plantcare.css" type="text/css" rel="stylesheet" />
+
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="./paperjs-v0.9.24/dist/paper-full.js"></script>
+		<script src="./plantcare-bundle.js"></script>
+		<script type="text/paperscript" src="./paper-plantcare.js" canvas="plantCanvas"></script>
+	</head>
+	<body>
+		<div>
+			<h1>How's My Plant?</h1>
+			<div id="graph" class="inline"></div>
+			<canvas id="plantCanvas" resize="true"></canvas> 
+			<br/>
+			<button type="button" id="water-button" class="btn btn-lg btn-primary">Water my plant!</button>
+		</div>
+	</body>
+</html>
