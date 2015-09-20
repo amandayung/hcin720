@@ -2,9 +2,10 @@
 var d3 = require('d3');
 
 //Photon info
-var device = "put your device ID here";
-var token = "put your token ID here";
-var callback = "fanfare";
+var device = "2d0033001647343337363432";
+var token = "9a71cf04a48131401f132f361dd36d5040032c4a";
+var waterCallback = "water";
+var successCallback = "fanfare";
 
 //parameter for controlling whether the data is retrieved
 //from the serial port or from the cloud
@@ -16,14 +17,13 @@ var socket = io();
 window.params = {
 	minDarkness: 0,
 	maxDarkness: 4095,
-	minMoisture: 600, //minimum moisture set for visual
-	//testing values
+	minMoisture: 2000, //minimum moisture set for visual
 	/*attendMoisture: 300, //level of moisture that it starts complaining it's too low
 	maxMoisture: 800, //level of moisture to set off sound
 	waterThreshold: 200, //how much difference there needs to be between readings to consider it a cause of watering*/
-	attendMoisture: 1000, //level of moisture that it starts complaining it's too low
-	maxMoisture: 1500, //level of moisture to set off sound
-	waterThreshold: 400, //how much difference there needs to be between readings to consider it a cause of watering
+	attendMoisture: 2500, //level of moisture that it starts complaining it's too low
+	maxMoisture: 3000, //level of moisture to set off sound
+	waterThreshold: 500, //how much difference there needs to be between readings to consider it a cause of watering
 	maxStorage: 500, //have a cutoff for length of the data arrays
 	waitToCheck: 10, //wait 10 readings before checking the moisture level again for watering
 	currentWait: 0 //wait counter
@@ -39,7 +39,8 @@ window.photonData = {
 
 //once everything's set up, start getting the data
 $(document).ready(function() {
-	$("#water-button").click(playFanfare);
+	//when this button is clicked, activate servo
+	$("#water-button").click(waterPlant);
 
 	//figure out how to parse data, based on source
 	if (viaCloud) {
@@ -121,18 +122,33 @@ function checkForWater() {
 			playFanfare();
 		}
 
-		console.log(window.photonData.curMoistureSensor + ", " + moistureDifference);
+		//console.log(window.photonData.curMoistureSensor + ", " + moistureDifference);
 	}
 	else {
 		window.params.currentWait--;
 	}
 }
 
+//call photon function to start moving the servo
+function waterPlant() {
+	$.ajax({
+  		type: "POST",
+  		url: "https://api.particle.io/v1/devices/" + device + "/" + waterCallback + "?access_token=" + token,
+ 		data: {
+ 			args: "water"
+ 		},
+  		success: function(data) {
+			//console.log(data);
+		}
+	});
+}
+
+
 //call the function on the photon for playing fanfare
 function playFanfare() {
 	$.ajax({
   		type: "POST",
-  		url: "https://api.particle.io/v1/devices/" + device + "/" + callback + "?access_token=" + token,
+  		url: "https://api.particle.io/v1/devices/" + device + "/" + successCallback + "?access_token=" + token,
  		data: {
  			args: "play"
  		},

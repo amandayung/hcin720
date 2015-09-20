@@ -9,9 +9,11 @@ var RightLeaf;
 var pot;
 var potTrim;
 
+//initialize plant
 drawPlant(0);
 
 function onFrame(event) {
+	//check if the plant visualization needs to be updated
 	var droopiness;
 	var moisture = window.photonData.curMoistureSensor;
 	if (moisture > window.params.maxMoisture) {
@@ -23,12 +25,12 @@ function onFrame(event) {
 	else {
 		var moistureRange = window.params.maxMoisture - window.params.minMoisture;
 		var droopiness = Math.round(100 - ((moisture - window.params.minMoisture)/moistureRange * 100));
-		//console.log(droopiness);	
 	}
 	
 	drawPlant(droopiness);
 }
 
+//update plant visualization based on moisture level ("rotation angle")
 function drawPlant(rotationAngle) {
 	if (stem) {
 		stem.remove();
@@ -38,16 +40,13 @@ function drawPlant(rotationAngle) {
 		potTrim.remove();
 	}
 	//stem points
-	/*var point1 = new Point(view.center.x, 500);
-	var point2 = new Point(view.center.x, 350);
-	var point3 = new Point(view.center.x, 200);
-	var point4 = new Point(view.center.x, 100);*/
-
 	var point1 = new Point(view.center.x, view.center.y + 250);
 	var point2 = new Point(view.center.x, view.center.y + 100);
 	var point3 = new Point(view.center.x, view.center.y - 50);
 	var point4 = new Point(view.center.x, view.center.y - 150);
 
+	//rotate top portion of stem to create droopiness
+	//based on moisture level
 	var vector = point4 - point3;
 	var newPoint4 = point3 + vector.rotate(rotationAngle);
 

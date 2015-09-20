@@ -2,6 +2,9 @@
 //Mositure sensor code was modeled after:
 //https://learn.sparkfun.com/tutorials/sparkfun-inventors-kit-for-photon-experiment-guide/all#experiment-3-houseplant-monitor
 
+//Servo code was modeled after:
+//https://learn.sparkfun.com/tutorials/sparkfun-inventors-kit-for-photon-experiment-guide/all#experiment-7-automatic-fish-feeder
+
 //This file was compiled via Particle Build
 
 // This library was included by the Particle IDE
@@ -14,8 +17,19 @@ int amountDarkness = 0;
 
 //parameters for moisture sensor
 const int moistureSensor = A1;
-const int moisturePower = D2;
+const int moisturePower = D1;
 int moisture = 0;
+
+//parameters for servo motor
+Servo waterServo;
+const int servoPin = D2;
+int startPosition = 0;
+int stopPosition = 100;
+int servoPosition = startPosition;
+int servoState = 0;
+int activeServo = 0; //keeps track of if servo should be moving now or not
+int watered = 0; //checks if plant has enough water
+
 
 //parameters for playing music
 const int speakerPin = D0;
@@ -23,7 +37,9 @@ const int songLength = 9;
 
 //timing variables
 unsigned long startTime = 0;
-unsigned long intervalCheck = 5000;
+unsigned long intervalCheck = 2000;
+unsigned long waterStartTime = 0;
+unsigned long waterIntervalCheck = 250;
 
 //song to play (Final Fantasy fanfare by Nobuo Uematsu)
 //sheet music found at:
@@ -46,13 +62,24 @@ void setup() {
     pinMode(moisturePower, OUTPUT);
     digitalWrite(moisturePower, LOW); //set to low so that no power is going through
     
+    //set up servo
+    waterServo.attach(servoPin);
+    servoPosition = startPosition;
+
+    waterServo.write(servoPosition); //set servo to initial position
+    delay(3000); //give servo time to move to position
+    waterServo.detach(); //this prevents it from jittering
+    
     //set speaker pin for output
     pinMode(speakerPin, OUTPUT);
+    
+    //setup callback to move servo
+    Spark.function("water", waterPlant);
     
     //set up callback to play music
     Spark.function("fanfare", playFanfare);
     
-    //inital start time
+    //initial start time
     startTime = millis();
 }
 
@@ -67,6 +94,19 @@ void loop() {
         
          //reset start time
         startTime = millis();
+    }
+    
+    //if statement for checking if servo needs to be moved
+    if (activeServo) {
+        unsigned long currentWaterTime = millis();
+
+        if (currentWaterTime - waterStartTime > waterIntervalCheck) {
+            moveServo();
+            
+            //reset start time
+            waterStartTime = millis();
+
+        }
     }
     
 }
@@ -107,7 +147,52 @@ void sendData() {
         char dataBuffer[256];
         data.printTo(dataBuffer, sizeof(dataBuffer));
         Spark.publish("readings", dataBuffer);
+}
+
+//callback function to start up the servo
+int waterPlant(String command) {
+    if (command == "water") {
+        activeServo = 1;
         
+        //set start time (start up immediately)
+        waterStartTime = millis()-waterIntervalCheck;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+//move the servo if it's in an active state
+void moveServo() {
+    //this is to see if there was a command sent to it previously
+    //turn off power to the servo if so
+    if (servoState == 1) {
+        waterServo.detach();
+        servoState = 0;
+    }
+    
+    //if no command was sent to it (or it had just been turned off)
+    //then turn on
+    if (servoState == 0) {
+      waterServo.attach(servoPin);
+      servoState = 1;
+    }
+    
+    //if the plant has been watered enough or it's reached max motion, stop it
+    //and return to starting position
+    if (watered || servoPosition == stopPosition) {
+        servoPosition = startPosition;
+        waterServo.write(servoPosition);
+        delay(2500); //wait until the servo gets back to where it needs to be
+        waterServo.detach();
+        servoState = 0;
+        activeServo = 0;
+    }
+    else { //otherwise keep moving servo
+        servoPosition = servoPosition + 20;
+        waterServo.write(servoPosition);
+    }
 }
 
 
@@ -116,6 +201,7 @@ void sendData() {
 //https://learn.sparkfun.com/tutorials/sparkfun-inventors-kit-for-photon-experiment-guide/experiment-5-music-time
 int playFanfare(String command) {
     if (command == "play") {
+        watered = 1; //send this back to the servo so it knows to stop
         int i, duration;
     
         for (i = 0; i < songLength; i++) {
@@ -149,9 +235,6 @@ int frequency(char note) {
     char names[] = {'d', 'A', 'c'};
     int frequencies[] = {587, 466, 523};
     //int frequencies[] = {1175, 932, 1047};
-    
-    // Now we'll search through the letters in the array, and if
-    // we find it, we'll return the frequency for that note.
     
     //find the right note
     for (i = 0; i < numNotes; i++) {
