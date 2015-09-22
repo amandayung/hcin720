@@ -38,11 +38,11 @@ Demo:
 
 This assignment required the use of a Photon with sensors to send data over a serial port and via the cloud. The circuit I built was designed for watching the status of a plant (both its soil moisture level and how much light it is getting), in addition to providing a feature through the cloud to remotely water the plant.
 
-![Plantcare setup]()
+![Plantcare setup](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment2/plantcare-setup.png)
 
 ### Circuit
 
-![Circuit setup]()
+![Circuit setup](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment2/circuit-setup.png)
 
 The circuit includes:
 * a photoresistor: this sensor reports how much light the plant is currently receiving. This data is sent both through the serial port and via the cloud. Both are in JSON format.
