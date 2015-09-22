@@ -2,8 +2,8 @@
 var d3 = require('d3');
 
 //Photon info
-var device = "2d0033001647343337363432";
-var token = "9a71cf04a48131401f132f361dd36d5040032c4a";
+var device = "put your device ID here";
+var token = "put your access token here";
 var waterCallback = "water";
 var successCallback = "fanfare";
 
@@ -18,9 +18,6 @@ window.params = {
 	minDarkness: 0,
 	maxDarkness: 4095,
 	minMoisture: 2000, //minimum moisture set for visual
-	/*attendMoisture: 300, //level of moisture that it starts complaining it's too low
-	maxMoisture: 800, //level of moisture to set off sound
-	waterThreshold: 200, //how much difference there needs to be between readings to consider it a cause of watering*/
 	attendMoisture: 2500, //level of moisture that it starts complaining it's too low
 	maxMoisture: 3000, //level of moisture to set off sound
 	waterThreshold: 500, //how much difference there needs to be between readings to consider it a cause of watering
