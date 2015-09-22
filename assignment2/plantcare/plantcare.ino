@@ -56,6 +56,7 @@ int tempo = 135;
 
 
 void setup() {
+        
     Serial.begin(9600);
     
     //set pin for power for soil moisture sensor
@@ -79,9 +80,18 @@ void setup() {
     //set up callback to play music
     Spark.function("fanfare", playFanfare);
     
+    //setup for serial activation for watering
+    Spark.subscribe("waterSerial", waterPlantSerial);
+    
+    //setup for serial activation to play music
+    Spark.subscribe("fanfareSerial", playFanfareSerial);
+    
+    
+    
     //initial start time
     startTime = millis();
 }
+
 
 void loop() {
     unsigned long currentTime = millis();
@@ -147,6 +157,27 @@ void sendData() {
         char dataBuffer[256];
         data.printTo(dataBuffer, sizeof(dataBuffer));
         Spark.publish("readings", dataBuffer);
+}
+
+void waterPlantSerial(const char *event, const char *data) {
+     activeServo = 1;
+        
+    //set start time (start up immediately)
+    waterStartTime = millis()-waterIntervalCheck;
+}
+
+void playFanfareSerial(const char *event, const char *data) {
+     watered = 1; //send this back to the servo so it knows to stop
+    int i, duration;
+
+    for (i = 0; i < songLength; i++) {
+        duration = beats[i] * tempo;  // length of note/rest in ms
+        
+        tone(speakerPin, frequency(notes[i]), duration);
+        delay(duration); // wait for tone to finish
+        
+        delay(tempo/10); // brief pause between notes
+    }
 }
 
 //callback function to start up the servo

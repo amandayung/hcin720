@@ -45,12 +45,14 @@ This assignment required the use of a Photon with sensors to send data over a se
 The circuit includes:
 * **a photoresistor:** this sensor reports how much light the plant is currently receiving. This data is sent both through the serial port and via the cloud. Both are in JSON format.
 * **a soil moisture sensor:** this sensor reports how much water is currently in the soil. This data is sent both through the serial port and via the cloud. Both are in JSON format.
-* **a servo:** Attached to the servo is a small plastic container that can be filled with water. When monitoring the plant via the web page, you can press a button to call a function that turns the servo on to dump the water into the plant's pot.
-* **a speaker:** Once the plant is watered (based on the current moisture level), the circuit also plays a quick song to let you know you watered the plant successfully. Since this feature is based on checking the change in moisture level of the soil, it will also play music if you water the plant yourself.
+* **a servo:** Attached to the servo is a small plastic container that can be filled with water. When monitoring the plant via the web page, you can press a button to call a function that turns the servo on to dump the water into the plant's pot. This can be sent either via the cloud or through the serial port.
+* **a speaker:** Once the plant is watered (based on the current moisture level), the circuit also plays a quick song to let you know you watered the plant successfully. Since this feature is based on checking the change in moisture level of the soil, it will also play music if you water the plant yourself. This function is called on the photon via the cloud or the serial port.
 
 ![Circuit setup](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment2/circuit-setup.png)
 
 ### Visualization
+
+The data for the visualizatio can be retrieved either via the cloud or through the serial port by setting the variable "viaCloud" as true or false.
 
 For the visualization of the photoresistor data, a line graph displays the amount of light the plant is currently receiving (this is on a scale of 0-100% light, based on an inverse relationship to the amount of resistance in the photoresistor). This dynamically updates as data is received every second.
 

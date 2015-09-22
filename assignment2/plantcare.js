@@ -9,7 +9,7 @@ var successCallback = "fanfare";
 
 //parameter for controlling whether the data is retrieved
 //from the serial port or from the cloud
-var viaCloud = true;
+var viaCloud = false;
 
 var socket = io();
 
@@ -128,31 +128,42 @@ function checkForWater() {
 
 //call photon function to start moving the servo
 function waterPlant() {
-	$.ajax({
-  		type: "POST",
-  		url: "https://api.particle.io/v1/devices/" + device + "/" + waterCallback + "?access_token=" + token,
- 		data: {
- 			args: "water"
- 		},
-  		success: function(data) {
-			//console.log(data);
-		}
-	});
+	if (viaCloud) {
+		$.ajax({
+	  		type: "POST",
+	  		url: "https://api.particle.io/v1/devices/" + device + "/" + waterCallback + "?access_token=" + token,
+	 		data: {
+	 			args: "water"
+	 		},
+	  		success: function(data) {
+				//console.log(data);
+			}
+		});
+	}
+	else {
+		socket.emit('to serial', "waterSerial");
+	}
+	
 }
 
 
 //call the function on the photon for playing fanfare
 function playFanfare() {
-	$.ajax({
-  		type: "POST",
-  		url: "https://api.particle.io/v1/devices/" + device + "/" + successCallback + "?access_token=" + token,
- 		data: {
- 			args: "play"
- 		},
-  		success: function(data) {
-			//console.log(data);
-		}
-	});
+	if (viaCloud) {
+		$.ajax({
+	  		type: "POST",
+	  		url: "https://api.particle.io/v1/devices/" + device + "/" + successCallback + "?access_token=" + token,
+	 		data: {
+	 			args: "play"
+	 		},
+	  		success: function(data) {
+				//console.log(data);
+			}
+		});
+	}
+	else {
+		socket.emit('to serial', "fanfareSerial");
+	}	
 }
 
 
