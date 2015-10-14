@@ -78,17 +78,25 @@ Other libraries used for sending and receiving data:
 
 For this assignment, a container needed to be made for the electronics put together in Assignment 2. I created one container for the circuit board and another container for the servo which waters the plant.
 
+![overall setup](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment3/overall-container.png)
+
 ### Preparing the Circuit
 
 Since the circuit was originally created on a breadboard, I soldered the circuit pieces to a perf board so that the circuit could have a smaller footprint. I also added a power switch to the battery so that the device could be easily powered on and off once the circuit board was inside the container.
 
 ### Circuit Board Container
 
+![container front](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment3/container-front.png)
+
+![container back](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment3/container-back.png)
+
 The circuit board container is a model of the pokemon bulbasaur (original model by FLOWALISTIK from Thingiverse: [http://www.thingiverse.com/thing:327753](http://www.thingiverse.com/thing:327753)), modified to have a hole in the body of the bulbasaur which snugly fits the circuit board. The "bulb" of the bulbasaur became the lid of the container. I created the lid model from scratch in order to incorporate a portion that could be inserted into the rectangular hole cut into the body. Both TinkerCAD and 123D Design were using for these 3D models.
 
 I then processed the models in 123D Make in order to create 3D objects with 2D pieces via the laser cutter. The body of the bulbasaur was formed with stacked slices, while the bulb was formed with radial slices. For the laser cutter to properly cut the pieces, I then modified the files output by 123D Make in Illustrator to support the color conventions of the lab laser cutter.
 
 ### Watering Dish
+
+![watering dish](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment3/watering-dish.png)
 
 The container for the servo, or the "watering dish", was designed to be a holder for both the servo and the flower pot. The dish has a slight inset to snugly fit the base of the flower pot. The dish then has a post to the side that sticks out vertically, in order to support a modeled cloud -- this cloud holds the servo. The original watering container (a small plastic cup) was replaced with a simple half-sphere container. All of the pieces in this container were modeled using both TinkerCAD and 123D Design.
 
