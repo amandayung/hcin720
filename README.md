@@ -94,6 +94,8 @@ The circuit board container is a model of the pokemon bulbasaur (original model 
 
 I then processed the models in 123D Make in order to create 3D objects with 2D pieces via the laser cutter. The body of the bulbasaur was formed with stacked slices, while the bulb was formed with radial slices. For the laser cutter to properly cut the pieces, I then modified the files output by 123D Make in Illustrator to support the color conventions of the lab laser cutter.
 
+The stacked slices were glued together, while the radial slices of the lid simply hold together on their own. A hole at the back of the body of the bulbasaur allows for USB cable access. The open design of the lid was chosen for easy visibility of the Photon's status LED and for the ability to hear the sound produced by the speaker. Additionally, this design allows for openings for all of the external components of the circuit: the photoresistor can be extended out of the top of the bulb, while the wires to the photoresistor and servo can come out from the side of the bulb. These wires were wrapped with floral tape to give them a more "vine-like" appearance.
+
 ### Watering Dish
 
 ![watering dish](https://raw.githubusercontent.com/amandayung/hcin720/master/assignment3/watering-dish.png)
